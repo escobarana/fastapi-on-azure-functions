@@ -61,13 +61,12 @@ Inside the `WrapperFunction` folder, the file `function.json` includes a `route`
   "scriptFile": "__init__.py",
   "bindings": [
     {
-      "authLevel": "anonymous",
+      "authLevel": "function",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
       "methods": [
-        "get",
-        "post"
+        "get"
       ],
       "route": "{*route}"
     },
@@ -79,6 +78,10 @@ Inside the `WrapperFunction` folder, the file `function.json` includes a `route`
   ]
 }
 ```
+
+* authLevel is set to `function` to require an API key to invoke the function. 
+* The `route` key is set to `{*route}` to allow the function to handle all routes. 
+* The `methods` key is set to `get` to allow the function to handle GET requests.
 
 In that same folder, the `__init__.py` file uses `AsgiMiddleware` to redirect invocations to a FastAPI app with two routes defined.
 
@@ -98,14 +101,14 @@ Once the function is running, test the function at the local URL displayed in th
 
 ```log
 Functions:
-        WrapperFunction: [GET,POST] http://localhost:7071/{*route}
+        WrapperFunction: [GET,POST] http://localhost:7071/{*route}?code=<API_KEY>
 ```
 
 Try out URLs corresponding to the handlers in the app, both the simple path and the parameterized path:
 
 ```
-http://localhost:7071/contacts
-http://localhost:7071/contacts/company_name
+http://localhost:7071/contacts?code=<API_KEY>
+http://localhost:7071/contacts/company_name?code=<API_KEY>
 ```
 
 ### Deploying to Azure
@@ -121,8 +124,8 @@ There are three main ways to deploy this to Azure:
 Once deployed, test different paths on the deployed URL, using either a browser or a tool like Postman.
 
 ```
-http://<FunctionAppName>.azurewebsites.net/contacts
-http://<FunctionAppName>.azurewebsites.net/contacts/company_name
+http://<FunctionAppName>.azurewebsites.net/contacts?code=<API_KEY>
+http://<FunctionAppName>.azurewebsites.net/contacts/company_name?code=<API_KEY>
 ```
 
 If you get an error about `handle_async` not being defined, that is likely because the Azure Functions runtime doesn't yet have the latest version of `azure-functions`.
