@@ -1,5 +1,4 @@
-from pydantic import BaseModel, validator
-from typing import Optional
+from pydantic import BaseModel
 
 """
 Contains all schemas alias domain models of the application.
@@ -14,7 +13,7 @@ class ContactBase(BaseModel):
     """
 
     FullName: str = None
-    EmailAdressExrernal: str = None
+    EmailAdressExternal: str = None
     FirstName: str = None
     LastName: str = None
     isExternalAccount: str = None
@@ -23,7 +22,7 @@ class ContactBase(BaseModel):
     class Config:
         fields = {
             "FullName": {"description": "Full name of the contact"},
-            "EmailAdressExrernal": {
+            "EmailAdressExternal": {
                 "description": "External email address of the contact"
             },
             "FirstName": {"description": "First name of the contact"},
@@ -38,9 +37,9 @@ class Contact(ContactBase):
     Contact schema, database representation
     """
 
-    Contact_id: int
+    Contact_Id: str
 
     class Config:
         fields = {
-            "Contact_id": {"description": "Unique ID of the contact"},
+            "Contact_Id": {"description": "Unique ID of the contact"},
         }

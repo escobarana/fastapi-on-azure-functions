@@ -27,6 +27,7 @@ app = FastAPI(
 app.include_router(contacts.router)
 # Add additional api routers here
 
+
 @app.exception_handler(ApiException)
 async def generic_api_exception_handler(request: Request, ex: ApiException):
     """

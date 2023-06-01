@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Optional, List
+from typing import List, Optional
+
+import pandas as pd
 
 import schemas
 
@@ -21,14 +23,14 @@ class DatabaseManagerBase(ABC):
         ...
 
     @abstractmethod
-    def get_contacts_company(self, company: str) -> Optional[schemas.Contact]:
+    def get_contacts_company(self, company: str) -> Optional[List[schemas.Contact]]:
         """
         Returns specific contacts by company
         Args:
             company (str): name of the company
 
         Returns:
-            Optional[schemas.Contact]: Returns the specified contact
+            Optional[List[schemas.Contact]]: List of contacts belonging to the given company
         """
         ...
 
@@ -36,39 +38,22 @@ class DatabaseManagerBase(ABC):
 class FakeDataBaseManager(DatabaseManagerBase):
     def __init__(self) -> None:
         super().__init__()
-
+        source_contacts = pd.read_csv("resources/data.csv", delimiter=',')
         self._contacts = [
             schemas.Contact(
-                Contact_id=1,
-                FullName="FullName 1",
-                EmailAdressExrernal="contact1@imec.be",
-                FirstName="FirstName 1",
-                LastName="LastName 1",
-                isExternalAccount="No",
-                Company="Company 1",
-            ),
-            schemas.Contact(
-                Contact_id=2,
-                FullName="FullName 2",
-                EmailAdressExrernal="contact2@imec.be",
-                FirstName="FirstName 2",
-                LastName="LastName 2",
-                isExternalAccount="No",
-                Company="Company 2",
-            ),
-            schemas.Contact(
-                Contact_id=3,
-                FullName="FullName 3",
-                EmailAdressExrernal="contact3@imec.be",
-                FirstName="FirstName 3",
-                LastName="LastName 3",
-                isExternalAccount="No",
-                Company="Company 3",
-            ),
+                Contact_Id=row["Contact_Id"],
+                FullName=row["FullName"],
+                EmailAdressExternal=row["EmailAdressExternal"],
+                FirstName=row["FirstName"],
+                LastName=row["LastName"],
+                isExternalAccount=row["isExternalAccount"],
+                Company=row["Company"],
+            )
+            for index, row in source_contacts.iterrows()
         ]
 
     def get_contacts(self) -> Optional[List[schemas.Contact]]:
         return self._contacts
 
-    def get_contacts_company(self, company: str) -> Optional[schemas.Contact]:
-        return next(iter([p for p in self._contacts if p.Company == company]), None)
+    def get_contacts_company(self, company: str) -> Optional[List[schemas.Contact]]:
+        return [p for p in self._contacts if p.Company == company]

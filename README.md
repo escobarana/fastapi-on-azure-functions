@@ -36,6 +36,7 @@ The `requirements.txt` file has additional dependencies of the `fastapi` module:
 azure-functions
 fastapi
 pydantic
+pandas
 ```
 
 

@@ -1,4 +1,4 @@
-from orm import FakeDataBaseManager, DatabaseManagerBase
+from orm import DatabaseManagerBase, FakeDataBaseManager
 
 """
 For a real application a "real" ORM mapper with a real database connection must be defined here or in the get_db method.

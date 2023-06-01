@@ -1,4 +1,5 @@
 import azure.functions as func
+
 from FastAPIApp import app  # Main API application
 
 
